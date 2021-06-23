@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "esnext",
     "lib": ["esnext", "dom"],
+    "rootDir": "./",
     "allowJs": true,
     "checkJs": false,
     "skipLibCheck": true,
@@ -22,6 +23,6 @@
     "outDir": "dist",
     "charset": "utf8"
   },
-  "include": ["src"],
+  "include": ["./src"],
   "exclude": ["node_modules", "dist", "example"]
 }
