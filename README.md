@@ -24,6 +24,11 @@ After generate successfully, you can use "migrate" in [Sequelize](https://sequel
 Sometimes, undo(down) action may not work, then you should modify manually. Maybe it's because of ordering of relations of models.
 That issue is currently in the works.
 
+### Compatiblity
+
+- Use version `~2.0.0` for `sequelize@~6.0.0`
+- Use version `~1.0.0` for `sequelize@~4.0.0`
+
 ## Installation
 
 ```

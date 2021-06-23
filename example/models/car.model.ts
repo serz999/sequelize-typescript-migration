@@ -10,12 +10,12 @@ import { CarBrand } from "./car_brand.model";
 @Table
 export class Car extends Model<Car> {
   @Column
-  name: string;
+  name!: string;
 
   @ForeignKey(() => CarBrand)
   @Column
-  carBrandId: number;
+  carBrandId!: number;
 
   @BelongsTo(() => CarBrand)
-  carBrand: CarBrand;
+  carBrand!: CarBrand;
 }
