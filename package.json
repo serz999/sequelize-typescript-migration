@@ -1,6 +1,6 @@
 {
   "name": "@wuerdevoll/sequelize-typescript-migration",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "migration tool for sequelize & typescript users",
   "keywords": [
     "sequelize",
@@ -21,7 +21,6 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "postinstall": "npm run build",
     "start": "node dist/index.js"
   },
   "bin": {
