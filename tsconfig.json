@@ -19,12 +19,9 @@
     "sourceMap": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "baseUrl": "./",
-    "paths": {
-      "@src/*": ["src/*"]
-    },
     "outDir": "dist",
     "charset": "utf8"
   },
+  "include": ["src"],
   "exclude": ["node_modules", "dist", "example"]
 }
