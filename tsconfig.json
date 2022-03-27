@@ -9,6 +9,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "lib": ["esnext", "dom"],
+    "declaration": true,
     "allowJs": true,
     "checkJs": false,
     "skipLibCheck": true,
