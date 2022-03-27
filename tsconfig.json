@@ -5,10 +5,10 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",                          
-    "target": "esnext",
-    "module": "esnext",
+    "target": "es2021",
+    "module": "commonjs",
     "moduleResolution": "node",
-    "lib": ["esnext", "dom"],
+    "lib": ["es2021", "dom"],
     "declaration": true,
     "allowJs": true,
     "checkJs": false,
