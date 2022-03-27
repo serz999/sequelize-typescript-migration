@@ -1,3 +1,8 @@
+# @viiinzzz/sequelize-typescript-migration
+
+Temporary fork for my own purpose
+Thanks kimjbstar and mricharz for the awesome lib.
+
 # @wuerdevoll/sequelize-typescript-migration
 
 ## Tribute

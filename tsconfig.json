@@ -1,6 +1,13 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Node 16",
+
   "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",                          
     "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
     "lib": ["esnext", "dom"],
     "allowJs": true,
     "checkJs": false,
@@ -10,21 +17,20 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
-    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
     "noImplicitAny": false,
     "sourceMap": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "baseUrl": "./",
-    "paths": {
-      "@src/*": ["src/*"]
-    },
-    "outDir": "dist",
     "charset": "utf8"
   },
-  "exclude": ["node_modules", "dist", "example"]
+  "include": [
+    "./src/**/*.ts"
+  ],
+  "exclude": [
+    "./node_modules",
+    "./dist",
+    "./example"
+  ]
 }

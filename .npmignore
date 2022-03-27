@@ -15,3 +15,7 @@ example/
 .editorconfig
 
 npm-debug.log
+
+tsconfig.json
+
+package-lock.json
