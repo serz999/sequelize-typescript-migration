@@ -61,7 +61,7 @@ export default function reverseSequelizeColType(
     if (!attrType.options.length) {
       return `${prefix}TEXT`;
     }
-    const postfix = `('${attrType.options.length.toLowerCase()}')`;
+    const postfix = `('${attrType.options.length?.toLowerCase()}')`;
     return `${prefix}TEXT(${postfix})`;
   }
 
@@ -120,7 +120,7 @@ export default function reverseSequelizeColType(
   }
 
   if (attrType.constructor.name === "BLOB") {
-    const postfix = `'${attrType.options.length.toLowerCase()}'`;
+    const postfix = `'${attrType.options.length?.toLowerCase()}'`;
     return `${prefix}BLOB(${postfix})`;
   }
 
