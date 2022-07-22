@@ -1,7 +1,10 @@
-# @viiinzzz/sequelize-typescript-migration
+# @mmRoshani/sequelize-typescript-migration
 
-Temporary fork for my own purpose
-Thanks kimjbstar and mricharz for the awesome lib.
+#### Idea: founded the best changes at each 27th fork from the main repository and merge them together.
+
+- use it from npm.com by the name of `sequelize-typescript-migration-lts`
+
+Thanks kimjbstar, mricharz, syon-development, viinzzz and lou2013  for the awesome lib.
 
 # @wuerdevoll/sequelize-typescript-migration
 
