@@ -1,8 +1,5 @@
-import {
-  DataType as SequelizeTypescriptDataType,
-  Sequelize,
-} from "sequelize-typescript";
-import { DataType, NUMBER, STRING, DATE, INTEGER } from "sequelize";
+import { Sequelize } from "sequelize-typescript";
+import { DataType } from "sequelize";
 
 // interface IDataType {
 //   key: string;
@@ -27,7 +24,7 @@ import { DataType, NUMBER, STRING, DATE, INTEGER } from "sequelize";
 
 export default function reverseSequelizeColType(
   sequelize: Sequelize,
-  attrType: any,
+  attrType: any | never,
   prefix = "Sequelize."
 ) {
   if (attrType.constructor.name === "VIRTUAL") {
@@ -61,17 +58,19 @@ export default function reverseSequelizeColType(
     if (!attrType.options.length) {
       return `${prefix}TEXT`;
     }
-    const postfix = `('${attrType.options.length?.toLowerCase()}')`;
+    const postfix = `('${attrType.options.length.toLowerCase()}')`;
     return `${prefix}TEXT(${postfix})`;
   }
 
   if (attrType.constructor.name === "DECIMAL") {
-    const params:any[] = [];
+    const params = [];
 
     if (attrType.options.precision) {
+      // @ts-ignore
       params.push(attrType.options.precision);
     }
     if (attrType.options.scale) {
+      // @ts-ignore
       params.push(attrType.options.scale);
     }
     const postfix = params.length > 0 ? `(${params.join(",")})` : "";
@@ -83,12 +82,14 @@ export default function reverseSequelizeColType(
       attrType.constructor.name
     ) >= 0
   ) {
-    const params:any[] = [];
+    const params = [];
 
     if (attrType.options.length) {
+      // @ts-ignore
       params.push(attrType.options.length);
     }
     if (attrType.options.decimals) {
+      // @ts-ignore
       params.push(attrType.options.decimals);
     }
     let postfix = params.length > 0 ? `(${params.join(",")})` : "";
@@ -114,13 +115,12 @@ export default function reverseSequelizeColType(
   if (attrType.constructor.name === "DATEONLY") {
     return `${prefix}DATEONLY`;
   }
-
-  if (attrType.constructor.name === "JSON") {
+  if (attrType.constructor.name === "JSONTYPE") {
     return `${prefix}JSON`;
   }
 
   if (attrType.constructor.name === "BLOB") {
-    const postfix = `'${attrType.options.length?.toLowerCase()}'`;
+    const postfix = `'${attrType.options.length.toLowerCase()}'`;
     return `${prefix}BLOB(${postfix})`;
   }
 
@@ -175,17 +175,17 @@ export default function reverseSequelizeColType(
     "HSTORE",
     "JSON",
     "JSONB",
-    "JSONTYPE",
-    "DOUBLE",
     "NOW",
     "UUID",
     "UUIDV1",
     "UUIDV4",
+    "JSONTYPE",
+    "DOUBLE",
     "CIDR",
     "INET",
     "MACADDR",
     "CITEXT",
-  ].forEach(typeName => {
+  ].forEach((typeName) => {
     if (attrType.constructor.name === typeName) {
       seqType = `${prefix}${typeName}`;
     }

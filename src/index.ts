@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize-typescript";
 import beautify from "js-beautify";
-import fs from "fs";
+import * as fs from "fs";
 import { IMigrationState } from "./constants";
 import { Model, ModelCtor, QueryInterface } from "sequelize/types";
 import getTablesFromModels from "./utils/getTablesFromModels";
@@ -67,7 +67,8 @@ export class SequelizeTypescriptMigration {
         lastMigrationState !== undefined ? lastMigrationState["tables"] : {},
     };
     const currentState: IMigrationState = {
-      revision: (previousState.revision || 0) + 1,
+      // @ts-ignore
+      revision: previousState.revision + 1,
       tables: getTablesFromModels(sequelize, models),
     };
 
@@ -86,12 +87,11 @@ export class SequelizeTypescriptMigration {
     migration.commandsDown = tmp.commandsUp;
 
     if (migration.commandsUp.length === 0) {
-      console.log("No changes found");
-      return Promise.resolve({msg: "success: no changes found"});
+      return Promise.resolve({ msg: "success: no changes found" });
     }
 
     // log
-    migration.consoleOut.forEach(v => {
+    migration.consoleOut.forEach((v) => {
       console.log(`[Actions] ${v}`);
     });
     if (options.preview) {
@@ -104,11 +104,7 @@ export class SequelizeTypescriptMigration {
       return Promise.resolve({ msg: "success without save" });
     }
 
-    const info = await writeMigration(
-      currentState,
-      migration,
-      options
-    );
+    const info = await writeMigration(currentState, migration, options);
 
     console.log(
       `New migration to revision ${currentState.revision} has been saved to file '${info.filename}'`
@@ -124,9 +120,7 @@ export class SequelizeTypescriptMigration {
     ];
 
     try {
-
       await queryInterface.bulkDelete("SequelizeMetaMigrations", {
-        // @ts-ignore
         revision: currentState.revision,
       });
       await queryInterface.bulkInsert("SequelizeMetaMigrations", rows);
