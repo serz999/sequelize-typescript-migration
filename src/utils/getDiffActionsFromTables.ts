@@ -119,7 +119,7 @@ export default function getDiffActionsFromTables(
           }
 
           // new index
-          if (df.path[1] === "indexes") {
+          if (df.path[1] === "indexes" && df.rhs) {
             const tableName = df.path[0];
             const copied = df.rhs
               ? JSON.parse(JSON.stringify(df.rhs))
@@ -190,7 +190,7 @@ export default function getDiffActionsFromTables(
             }
           }
 
-          if (df.path[1] === "indexes") {
+          if (df.path[1] === "indexes" && df.lhs) {
             actions.push({
               actionType: "removeIndex",
               tableName,
