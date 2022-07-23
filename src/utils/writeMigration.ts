@@ -26,7 +26,7 @@ export default async function writeMigration(currentState, migration, options) {
           {
             "revision": {
               "primaryKey": true,
-              "type": Sequelize.UUID
+              "type": Sequelize.INTEGER
             },
             "name": {
               "allowNull": false,

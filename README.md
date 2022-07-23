@@ -1,19 +1,10 @@
-# @mmRoshani/sequelize-typescript-migration
+# sequelize-typescript-migration
 
 #### Idea: founded the best changes at each 27th fork from the main repository and merge them together.
 
 - use it from npm.com by the name of `sequelize-typescript-migration-lts`
 
 Thanks kimjbstar, mricharz, syon-development, viinzzz and lou2013  for the awesome lib.
-
-# @wuerdevoll/sequelize-typescript-migration
-
-## Tribute
-
-As the original creator of this package is not maintaining it anymore. I decided to create a fork and publish it in a scoped npm-package.
-Feel free to create PRs and let's maintain this project together.
-
-Thanks for all the initial work, [kimjbstar](https://github.com/kimjbstar/sequelize-typescript-migration)
 
 ## General info
 
@@ -54,7 +45,7 @@ const sequelize: Sequelize = new Sequelize({
 });
 
 await SequelizeTypescriptMigration.makeMigration(sequelize, {
-	outDir: path.join(__dirname, "../migrations"),
+ outDir: path.join(process.cwd(), './migrations'),
 	migrationName: "add-awesome-field-in-my-table",
 	preview: false,
 });
