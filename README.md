@@ -2,17 +2,17 @@
 
 #### Idea: founded the best changes at each 27th fork from the main repository and merge them together.
 
-- use it from [here](https://www.npmjs.com/package/sequelize-typescript-migration-lts) by the name of `sequelize-typescript-migration-lts`
+- Use it from [here](https://www.npmjs.com/package/sequelize-typescript-migration-lts) by the name of `sequelize-typescript-migration-lts`
 
-###### Installation
+#### Installation
 
-    ```js
-    npm i sequelize-typescript-migration-lts
-    //Or
-    yarn add sequelize-typescript-migration-lts
-    ``` 
+```js
+npm i sequelize-typescript-migration-lts
+// Or
+yarn add sequelize-typescript-migration-lts
+```
 
-Thanks kimjbstar, mricharz, syon-development, viinzzz and lou2013  for the awesome lib.
+Thanks kimjbstar, mricharz, syon-development, viinzzz and lou2013 for the awesome lib.
 
 ## General info
 
@@ -31,7 +31,7 @@ After generate successfully, you can use "migrate" in [Sequelize](https://sequel
 Sometimes, undo(down) action may not work, then you should modify manually. Maybe it's because of ordering of relations of models.
 That issue is currently in the works.
 
-### Compatiblity
+### Compatibility
 
 - Use version `~2.0.0` for `sequelize@~6.0.0`
 - Use version `~1.0.0` for `sequelize@~4.0.0`
@@ -39,17 +39,18 @@ That issue is currently in the works.
 ## Usage Example
 
 ```typescript
+import { join } from 'path'
 import { Sequelize } from "sequelize-typescript";
-import { SequelizeTypescriptMigration } from "@wuerdevoll/sequelize-typescript-migration";
+import { SequelizeTypescriptMigration } from "sequelize-typescript-migration-lts";
 
 const sequelize: Sequelize = new Sequelize({
-	// .. options
+  // .. options
 });
 
 await SequelizeTypescriptMigration.makeMigration(sequelize, {
- outDir: path.join(process.cwd(), './migrations'),
-	migrationName: "add-awesome-field-in-my-table",
-	preview: false,
+  outDir: join(__dirname, './migrations'),
+  migrationName: "add-awesome-field-in-my-table",
+  preview: false,
 });
 ```
 
@@ -245,8 +246,8 @@ then you can apply this `npx sequelize db:migrate --to 00000001-noname.js`
 ## Possible Usage Scenario
 Make sure to have writeMigration in your System under development and that sequelize is all set up
 
-If you change a model and re-run the backend there should be a new file under `db/migrations`, but the database
-won't update automatically. There are easy but important steps:
+If you change a model and re-run the backend there should be a new file under `db/migrations`, but the database won't update automatically. There are easy but important steps:
+
 1) Rename the file's name as well as the content (Info: name), so that everyone knows what this migration is about
 2) Migrate your database `sequelize db:migrate`
 3) Re-Serve the backend. You Should see 'No changes found'.
