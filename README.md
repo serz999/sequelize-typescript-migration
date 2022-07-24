@@ -258,3 +258,10 @@ If you change a model and re-run the backend there should be a new file under `d
 ## Documentation
 
 Will be ready soon!
+
+## Contributors
+
+Will be ready soon!
+
+- [MohammadMojtaba Roshani](https://github.com/mmRoshani)
+- [Anthony Luzquiños](https://github.com/anthonylzq)
