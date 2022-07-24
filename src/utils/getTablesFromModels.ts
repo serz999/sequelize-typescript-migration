@@ -65,7 +65,7 @@ export default function reverseModels(
         "onUpdate",
         "onDelete",
         //"validate",
-      ].forEach(key => {
+      ].forEach((key) => {
         if (attribute[key] !== undefined) {
           rowAttribute[key] = attribute[key];
         }
@@ -80,7 +80,11 @@ export default function reverseModels(
     };
 
     let idx_out = {};
-    if (model.options && model.options.indexes && model.options.indexes.length > 0) {
+    if (
+      model.options &&
+      model.options.indexes &&
+      model.options.indexes.length > 0
+    ) {
       for (const _i in model.options.indexes) {
         const index = parseIndex(model.options.indexes[_i]);
         idx_out[`${index["hash"]}`] = index;
