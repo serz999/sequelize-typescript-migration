@@ -261,7 +261,5 @@ Will be ready soon!
 
 ## Contributors
 
-Will be ready soon!
-
 - [MohammadMojtaba Roshani](https://github.com/mmRoshani)
 - [Anthony Luzquiños](https://github.com/anthonylzq)
