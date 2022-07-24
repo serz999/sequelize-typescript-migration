@@ -120,10 +120,10 @@ export class SequelizeTypescriptMigration {
     ];
 
     try {
-      await queryInterface.bulkDelete("SequelizeMetaMigrations", {
+      await queryInterface.bulkDelete("SequelizeMigrationsMeta", {
         revision: currentState.revision,
       });
-      await queryInterface.bulkInsert("SequelizeMetaMigrations", rows);
+      await queryInterface.bulkInsert("SequelizeMigrationsMeta", rows);
 
       console.log(`Use sequelize CLI:
   npx sequelize db:migrate --to ${info.revisionNumber}-${

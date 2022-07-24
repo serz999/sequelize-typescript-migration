@@ -1,8 +1,16 @@
-# sequelize-typescript-migration
+# sequelize-typescript-migration-lts
 
 #### Idea: founded the best changes at each 27th fork from the main repository and merge them together.
 
-- use it from npm.com by the name of `sequelize-typescript-migration-lts`
+- use it from [here](https://www.npmjs.com/package/sequelize-typescript-migration-lts) by the name of `sequelize-typescript-migration-lts`
+
+###### Installation
+
+    ```js
+    npm i sequelize-typescript-migration-lts
+    //Or
+    yarn add sequelize-typescript-migration-lts
+    ``` 
 
 Thanks kimjbstar, mricharz, syon-development, viinzzz and lou2013  for the awesome lib.
 
@@ -27,12 +35,6 @@ That issue is currently in the works.
 
 - Use version `~2.0.0` for `sequelize@~6.0.0`
 - Use version `~1.0.0` for `sequelize@~4.0.0`
-
-## Installation
-
-```
-npm i -D @wuerdevoll/sequelize-typescript-migration
-```
 
 ## Usage Example
 
@@ -254,4 +256,4 @@ won't update automatically. There are easy but important steps:
 
 ## Documentation
 
-not ready yet.
+Will be ready soon!

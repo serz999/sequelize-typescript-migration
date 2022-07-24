@@ -22,7 +22,7 @@ export default async function writeMigration(currentState, migration, options) {
       {
         fn: "createTable",
         params: [
-          "SequelizeMetaMigrations",
+          "SequelizeMigrationsMeta",
           {
             "revision": {
               "primaryKey": true,
@@ -43,7 +43,7 @@ export default async function writeMigration(currentState, migration, options) {
        {
         fn: "bulkDelete",
         params: [
-          "SequelizeMetaMigrations",
+          "SequelizeMigrationsMeta",
           [{
             revision: info.revision
           }],
@@ -53,7 +53,7 @@ export default async function writeMigration(currentState, migration, options) {
       {
         fn: "bulkInsert",
         params: [
-          "SequelizeMetaMigrations",
+          "SequelizeMigrationsMeta",
           [{
             revision: info.revision,
             name: info.name,
@@ -68,7 +68,7 @@ export default async function writeMigration(currentState, migration, options) {
     {
       fn: "bulkDelete",
       params: [
-        "SequelizeMetaMigrations",
+        "SequelizeMigrationsMeta",
         [{
           revision: info.revision,
         }],
