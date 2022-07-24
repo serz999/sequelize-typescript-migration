@@ -3,8 +3,10 @@ import {
   Sequelize,
   DataType as SequelizeTypescriptDataType,
 } from "sequelize-typescript";
+
 export default async function createMigrationTable(sequelize: Sequelize) {
   const queryInterface: QueryInterface = sequelize.getQueryInterface();
+
   await queryInterface.createTable("SequelizeMigrations", {
     name: {
       type: SequelizeTypescriptDataType.STRING,
@@ -18,7 +20,7 @@ export default async function createMigrationTable(sequelize: Sequelize) {
       defaultValue: SequelizeTypescriptDataType.NOW,
     },
   });
-  await queryInterface.createTable("SequelizeMetaMigrations", {
+  await queryInterface.createTable("SequelizeMigrationsMeta", {
     revision: {
       type: SequelizeTypescriptDataType.INTEGER,
       allowNull: false,
