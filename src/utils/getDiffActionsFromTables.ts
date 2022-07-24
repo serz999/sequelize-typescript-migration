@@ -29,6 +29,7 @@ export default function getDiffActionsFromTables(
     previousStateTables,
     currentStateTables
   );
+
   if (difference === undefined) {
     return actions;
   }
@@ -102,6 +103,7 @@ export default function getDiffActionsFromTables(
                 // new field attributes
                 const options =
                   currentStateTables[tableName].schema[df.path[2]];
+
                 if (options.references) {
                   depends.push(options.references.nodel);
                 }
@@ -244,5 +246,6 @@ export default function getDiffActionsFromTables(
     }
   });
   const result = sortActions(actions);
+
   return result;
 }
