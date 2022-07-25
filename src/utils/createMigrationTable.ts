@@ -7,17 +7,12 @@ import {
 export default async function createMigrationTable(sequelize: Sequelize) {
   const queryInterface: QueryInterface = sequelize.getQueryInterface();
 
-  await queryInterface.createTable("SequelizeMigrations", {
+  await queryInterface.createTable("SequelizeMeta", {
     name: {
       type: SequelizeTypescriptDataType.STRING,
       allowNull: false,
       unique: true,
       primaryKey: true,
-    },
-    date: {
-      type: SequelizeTypescriptDataType.DATEONLY,
-      allowNull: false,
-      defaultValue: SequelizeTypescriptDataType.NOW,
     },
   });
   await queryInterface.createTable("SequelizeMigrationsMeta", {
@@ -36,9 +31,9 @@ export default async function createMigrationTable(sequelize: Sequelize) {
       allowNull: false,
     },
     date: {
-      type: SequelizeTypescriptDataType.DATEONLY,
+      type: SequelizeTypescriptDataType.DATE,
       allowNull: false,
-      defaultValue: SequelizeTypescriptDataType.NOW,
+      defaultValue: Sequelize.fn("now"),
     },
   });
 }
