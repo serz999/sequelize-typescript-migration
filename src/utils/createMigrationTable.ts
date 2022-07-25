@@ -1,44 +1,44 @@
-import { QueryInterface } from "sequelize/types";
+import { QueryInterface } from 'sequelize/types'
 import {
   Sequelize,
-  DataType as SequelizeTypescriptDataType,
-} from "sequelize-typescript";
+  DataType as SequelizeTypescriptDataType
+} from 'sequelize-typescript'
 
 export default async function createMigrationTable(sequelize: Sequelize) {
-  const queryInterface: QueryInterface = sequelize.getQueryInterface();
+  const queryInterface: QueryInterface = sequelize.getQueryInterface()
 
-  await queryInterface.createTable("SequelizeMigrations", {
+  await queryInterface.createTable('SequelizeMigrations', {
     name: {
       type: SequelizeTypescriptDataType.STRING,
       allowNull: false,
       unique: true,
-      primaryKey: true,
+      primaryKey: true
     },
     date: {
       type: SequelizeTypescriptDataType.DATEONLY,
       allowNull: false,
-      defaultValue: SequelizeTypescriptDataType.NOW,
-    },
-  });
-  await queryInterface.createTable("SequelizeMigrationsMeta", {
+      defaultValue: SequelizeTypescriptDataType.NOW
+    }
+  })
+  await queryInterface.createTable('SequelizeMigrationsMeta', {
     revision: {
       type: SequelizeTypescriptDataType.INTEGER,
       allowNull: false,
       unique: true,
-      primaryKey: true,
+      primaryKey: true
     },
     name: {
       type: SequelizeTypescriptDataType.STRING,
-      allowNull: false,
+      allowNull: false
     },
     state: {
       type: SequelizeTypescriptDataType.JSON,
-      allowNull: false,
+      allowNull: false
     },
     date: {
       type: SequelizeTypescriptDataType.DATEONLY,
       allowNull: false,
-      defaultValue: SequelizeTypescriptDataType.NOW,
-    },
-  });
+      defaultValue: SequelizeTypescriptDataType.NOW
+    }
+  })
 }
