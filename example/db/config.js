@@ -2,16 +2,16 @@ const path = require("path");
 const inflection = require("inflection");
 
 module.exports = {
-  username: process.env.SEQUELIZE_USERNAME,
-  password: process.env.SEQUELIZE_PASSWORD,
-  database: "test_migration2",
-  host: process.env.SEQUELIZE_HOST,
-  dialect: "mysql",
+  username: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASS,
+  database: process.env.DATABASE_NAME,
+  host: process.env.DATABASE_HOST,
+  dialect: process.env.DATABASE_DIALECT,
   models: [path.join(process.cwd(), "models")],
   modelMatch: (_filename, _member) => {
     const filename = inflection.camelize(_filename.replace(".model", ""));
     const member = _member;
     return filename === member;
   },
-  timezone: "+09:00",
+  timezone: process.env.DATABASE_TIMEZONE,
 };
