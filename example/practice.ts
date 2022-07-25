@@ -3,7 +3,9 @@ import { Sequelize } from "sequelize-typescript";
 import * as path from "path";
 import { Car } from "models/car.model";
 import { CarBrand } from "models/car_brand.model";
+import dotenv from "dotenv";
 import { Dialect } from "sequelize/types";
+dotenv.config();
 
 const bootstrap = async () => {
   const sequelize: Sequelize = new Sequelize({
@@ -17,13 +19,10 @@ const bootstrap = async () => {
     logging: false,
   });
   try {
-    const result = await SequelizeTypescriptMigration.makeMigration(
-      sequelize[0],
-      {
-        outDir: path.join(__dirname, "./migrations"),
-        migrationName: Date.now.toString(),
-      }
-    );
+    const result = await SequelizeTypescriptMigration.makeMigration(sequelize, {
+      outDir: path.join(process.cwd(), "./db/migrations"),
+      migrationName: "init",
+    });
     console.log(result);
   } catch (e) {
     console.log(e);
