@@ -1,6 +1,6 @@
 {
   "name": "sequelize-typescript-migration-lts",
-  "version": "3.1.4",
+  "version": "3.1.5",
   "description": "migration tool for sequelize & typescript users",
   "keywords": [
     "sequelize",
