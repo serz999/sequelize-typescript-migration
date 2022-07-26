@@ -69,3 +69,7 @@ dist/
 
 # TernJS port file
 .tern-port
+
+#ide
+.idea/*
+.vscode/*
