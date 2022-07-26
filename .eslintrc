@@ -38,7 +38,8 @@
         "devDependencies": [
           "**/*.test.ts",
           "webpack.config.js",
-          "jest.config.ts"
+          "jest.config.ts",
+          "example"
         ],
         "optionalDependencies": [
           "**/*.test.ts"

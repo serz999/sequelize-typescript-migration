@@ -88,7 +88,7 @@ ${JSON.stringify(action.options)}
           const nameOrAttrs =
             action.options &&
             action.options.indexName &&
-            action.options.indexName != ''
+            action.options.indexName !== ''
               ? `"${action.options.indexName}"`
               : JSON.stringify(action.fields)
           consoleOut.push(
@@ -101,7 +101,7 @@ ${JSON.stringify(action.options)}
         const nameOrAttrs =
           action.options &&
           action.options.indexName &&
-          action.options.indexName != ''
+          action.options.indexName !== ''
             ? `"${action.options.indexName}"`
             : JSON.stringify(action.fields)
 
@@ -127,6 +127,7 @@ ${JSON.stringify(action.options)}
 
 const propertyToStr = obj => {
   const vals: any[] = []
+
   for (const k in obj) {
     if (k === 'seqType') {
       vals.push(`"type": ${obj[k]}`)
@@ -138,6 +139,7 @@ const propertyToStr = obj => {
         vals.push(`"defaultValue": ${obj[k].value}`)
         continue
       }
+
       if (obj[k].notSupported) continue
 
       const x = {}
@@ -147,6 +149,7 @@ const propertyToStr = obj => {
     }
 
     const x = {}
+
     x[k] = obj[k]
     vals.push(JSON.stringify(x).slice(1, -1))
   }
@@ -159,6 +162,7 @@ const propertyToStr = obj => {
 
 const getAttributes = attrs => {
   const ret: any[] = []
+
   for (const attrName in attrs)
     ret.push(`      "${attrName}": ${propertyToStr(attrs[attrName])}`)
 

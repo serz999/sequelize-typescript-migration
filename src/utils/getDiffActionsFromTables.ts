@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { diff, Diff } from 'deep-diff'
 import sortActions from './sortActions'
 
@@ -25,21 +24,20 @@ export default function getDiffActionsFromTables(
   currentStateTables
 ) {
   const actions: IAction[] = []
-  const difference: Array<Diff<any, any>> = diff(
-    previousStateTables,
-    currentStateTables
-  )
+  const difference = diff(previousStateTables, currentStateTables)
 
   if (difference === undefined) return actions
 
   difference.forEach(df => {
+    if (!df.path) throw new Error('Missing path')
+
     switch (df.kind) {
       // add new
       case 'N':
         {
           // new table created
           if (df.path.length === 1) {
-            const depends = []
+            const depends: any[] = []
 
             const tableName = df.rhs.tableName
             Object.values(df.rhs.schema).forEach((v: any) => {
@@ -217,13 +215,11 @@ export default function getDiffActionsFromTables(
 
       // array change indexes
       case 'A':
-        {
-          console.log(
-            '[Not supported] Array model changes! Problems are possible. Please, check result more carefully!'
-          )
-          console.log('[Not supported] Difference: ')
-          console.log(JSON.stringify(df, null, 4))
-        }
+        console.log(
+          '[Not supported] Array model changes! Problems are possible. Please, check result more carefully!'
+        )
+        console.log('[Not supported] Difference: ')
+        console.log(JSON.stringify(df, null, 4))
         break
 
       default:

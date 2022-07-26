@@ -11,7 +11,7 @@ export default function reverseModels(
   }
 ) {
   const tables = {}
-  for (const [modelKey, model] of Object.entries(models)) {
+  for (const [, model] of Object.entries(models)) {
     const attributes: {
       [key: string]: ModelAttributeColumnOptions
     } = model.rawAttributes
@@ -19,7 +19,7 @@ export default function reverseModels(
     const resultAttributes = {}
 
     for (const [column, attribute] of Object.entries(attributes)) {
-      let rowAttribute = {}
+      let rowAttribute: { [x: string]: unknown } = {}
 
       if (attribute.defaultValue) {
         const _val = reverseSequelizeDefValueType(attribute.defaultValue)
@@ -73,7 +73,7 @@ export default function reverseModels(
       schema: resultAttributes
     }
 
-    const idx_out = {}
+    const indexOut: { [x: string]: unknown } = {}
     if (
       model.options &&
       model.options.indexes &&
@@ -81,11 +81,11 @@ export default function reverseModels(
     )
       for (const _i in model.options.indexes) {
         const index = parseIndex(model.options.indexes[_i])
-        idx_out[`${index.hash}`] = index
+        indexOut[`${index.hash}`] = index
         delete index.hash
       }
 
-    tables[model.tableName].indexes = idx_out
+    tables[model.tableName].indexes = indexOut
   } // model in models
 
   return tables

@@ -24,7 +24,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "packlist": "npx npm-packlist",
-    "lint": "eslint src/* --ext .ts --fix"
+    "lint": "eslint src/* --ext .ts --fix && eslint example/* --ext .js,.ts --fix"
   },
   "bin": {
     "sequelize-typescript-migration": "dist/index.js"
@@ -54,6 +54,7 @@
     "@types/validator": "^13.7.2",
     "@typescript-eslint/eslint-plugin": "^5.30.7",
     "@typescript-eslint/parser": "^5.30.7",
+    "dotenv": "^16.0.1",
     "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^17.0.0",

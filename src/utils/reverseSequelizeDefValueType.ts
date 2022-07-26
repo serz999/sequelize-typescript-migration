@@ -8,19 +8,19 @@ export default function reverseSequelizeDefValueType(
       value: `${prefix}fn('${defaultValue.fn}')`
     }
 
-  if (defaultValue.constructor.name == 'NOW')
+  if (defaultValue.constructor.name === 'NOW')
     return {
       internal: true,
       value: `${prefix}NOW`
     }
 
-  if (defaultValue.constructor.name == 'UUIDV1')
+  if (defaultValue.constructor.name === 'UUIDV1')
     return {
       internal: true,
       value: `${prefix}UUIDV1`
     }
 
-  if (defaultValue.constructor.name == 'UUIDV4')
+  if (defaultValue.constructor.name === 'UUIDV4')
     return {
       internal: true,
       value: `${prefix}UUIDV4`

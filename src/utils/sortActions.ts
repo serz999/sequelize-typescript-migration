@@ -41,13 +41,15 @@ export default function sortActions(actions: IAction[]) {
 
   for (let i = 0; i < actions.length; i++) {
     const leftAction: IAction = actions[i]
+
     if (leftAction.depends.length === 0) continue
 
     for (let j = 0; j < actions.length; j++) {
       const rightAction: IAction = actions[j]
+
       if (rightAction.depends.length === 0) continue
 
-      if (leftAction.actionType != rightAction.actionType) continue
+      if (leftAction.actionType !== rightAction.actionType) continue
 
       if (rightAction.depends.indexOf(leftAction.tableName) !== -1)
         if (i > j) {

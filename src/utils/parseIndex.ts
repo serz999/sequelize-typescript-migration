@@ -2,7 +2,7 @@ import { IndexesOptions } from 'sequelize/types'
 import * as crypto from 'crypto'
 
 export default function parseIndex(idx: IndexesOptions) {
-  const result = {}
+  const result: { [x: string]: unknown } = {}
 
   ;[
     'name',
@@ -17,7 +17,7 @@ export default function parseIndex(idx: IndexesOptions) {
     if (idx[key] !== undefined) result[key] = idx[key]
   })
 
-  const options = {}
+  const options: { [x: string]: unknown } = {}
 
   if (idx.name) options.indexName = idx.name
   // The name of the index. Default is __
