@@ -1,4 +1,6 @@
-import { diff, Diff } from 'deep-diff'
+import { diff } from 'deep-diff'
+
+import { Json } from '../constants'
 import sortActions from './sortActions'
 
 export interface IAction {
@@ -20,15 +22,17 @@ export interface IAction {
 }
 
 export default function getDiffActionsFromTables(
-  previousStateTables,
-  currentStateTables
+  previousStateTables: Json,
+  currentStateTables: Json
 ) {
   const actions: IAction[] = []
-  const difference = diff(previousStateTables, currentStateTables)
+  const differences = diff(previousStateTables, currentStateTables)
 
-  if (difference === undefined) return actions
+  if (!differences) return actions
 
-  difference.forEach(df => {
+  console.log(differences)
+
+  differences.forEach(df => {
     if (!df.path) throw new Error('Missing path')
 
     switch (df.kind) {
@@ -37,11 +41,11 @@ export default function getDiffActionsFromTables(
         {
           // new table created
           if (df.path.length === 1) {
-            const depends: any[] = []
+            const depends: string[] = []
+            const tableName = df.rhs.tableName as string
 
-            const tableName = df.rhs.tableName
             Object.values(df.rhs.schema).forEach((v: any) => {
-              if (v.references) depends.push(v.references.model)
+              if (v.references) depends.push(v.references.model as string)
             })
 
             actions.push({
@@ -54,8 +58,9 @@ export default function getDiffActionsFromTables(
 
             // create indexes
             if (df.rhs.indexes)
-              for (const _i in df.rhs.indexes) {
-                const copied = JSON.parse(JSON.stringify(df.rhs.indexes[_i]))
+              for (const i in df.rhs.indexes) {
+                const copied = JSON.parse(JSON.stringify(df.rhs.indexes[i]))
+
                 actions.push(
                   Object.assign(
                     {
@@ -227,6 +232,7 @@ export default function getDiffActionsFromTables(
         break
     }
   })
+
   const result = sortActions(actions)
 
   return result

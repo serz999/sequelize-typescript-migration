@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize-typescript'
 import beautify from 'js-beautify'
 import { existsSync } from 'fs'
 import { MigrationState } from './constants'
-import { Model, ModelCtor, QueryInterface } from 'sequelize/types'
+import { Model, ModelCtor } from 'sequelize/types'
 
 import getTablesFromModels from './utils/getTablesFromModels'
 import getDiffActionsFromTables from './utils/getDiffActionsFromTables'
@@ -44,7 +44,7 @@ export class SequelizeTypescriptMigration {
   ) => {
     options.preview = options.preview || false
 
-    if (existsSync(options.outDir) === false)
+    if (!existsSync(options.outDir))
       return Promise.reject(
         new Error(
           `${options.outDir} not exists. check path and if you did 'npx sequelize init' you must use path used in sequelize migration path`
@@ -57,7 +57,7 @@ export class SequelizeTypescriptMigration {
       [key: string]: ModelCtor<Model>
     } = sequelize.models
 
-    const queryInterface: QueryInterface = sequelize.getQueryInterface()
+    const queryInterface = sequelize.getQueryInterface()
 
     await createMigrationTable(sequelize)
 

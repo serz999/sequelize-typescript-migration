@@ -1,5 +1,14 @@
 import { IAction } from './getDiffActionsFromTables'
 
+const sortByLengthExists = (left: unknown[], right: unknown[]) => {
+  if (left.length === 0 && right.length > 0) return -1
+  // left < right
+  if (right.length === 0 && left.length > 0) return 1
+  // right < left
+
+  return 0
+}
+
 export default function sortActions(actions: IAction[]) {
   const orderedActionTypes: string[] = [
     'removeIndex',
@@ -10,15 +19,6 @@ export default function sortActions(actions: IAction[]) {
     'changeColumn',
     'addIndex'
   ]
-
-  const sortByLengthExists = (left: any[], right: any[]) => {
-    if (left.length === 0 && right.length > 0) return -1
-    // left < right
-    if (right.length === 0 && left.length > 0) return 1
-    // right < left
-
-    return 0
-  }
 
   actions.sort((left: IAction, right: IAction) => {
     if (
@@ -54,6 +54,7 @@ export default function sortActions(actions: IAction[]) {
       if (rightAction.depends.indexOf(leftAction.tableName) !== -1)
         if (i > j) {
           const c = actions[i]
+
           actions[i] = actions[j]
           actions[j] = c
         }

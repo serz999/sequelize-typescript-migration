@@ -1,5 +1,4 @@
 import { Sequelize } from 'sequelize-typescript'
-import { DataType } from 'sequelize'
 
 export default function reverseSequelizeColType(
   sequelize: Sequelize,

@@ -1,11 +1,10 @@
-import { QueryInterface } from 'sequelize/types'
 import {
   Sequelize,
   DataType as SequelizeTypescriptDataType
 } from 'sequelize-typescript'
 
 export default async function createMigrationTable(sequelize: Sequelize) {
-  const queryInterface: QueryInterface = sequelize.getQueryInterface()
+  const queryInterface = sequelize.getQueryInterface()
 
   await queryInterface.createTable('SequelizeMeta', {
     name: {

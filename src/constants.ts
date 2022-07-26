@@ -1,7 +1,11 @@
+export interface Json {
+  [key: string]: any
+}
+
 export interface MigrationState {
   revision?: number
   version?: number
-  tables: Record<string, unknown>
+  tables: Json
 }
 
 export interface SequelizeMigrations {

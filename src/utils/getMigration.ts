@@ -3,8 +3,8 @@ export default function getMigration(actions) {
   const commandsDown: string[] = []
   const consoleOut: string[] = []
 
-  for (const _i in actions) {
-    const action = actions[_i]
+  for (const i in actions) {
+    const action = actions[i]
 
     switch (action.actionType) {
       case 'createTable':
@@ -16,7 +16,6 @@ ${getAttributes(action.attributes)},
 ${JSON.stringify(action.options)}
 ] }`
           commandsUp.push(resUp)
-
           consoleOut.push(
             `createTable "${action.tableName}", deps: [${action.depends.join(
               ', '
@@ -28,8 +27,8 @@ ${JSON.stringify(action.options)}
       case 'dropTable':
         {
           const res = `{ fn: "dropTable", params: ["${action.tableName}"] }`
-          commandsUp.push(res)
 
+          commandsUp.push(res)
           consoleOut.push(`dropTable "${action.tableName}"`)
         }
         break
@@ -43,7 +42,6 @@ ${JSON.stringify(action.options)}
 ] }`
 
           commandsUp.push(resUp)
-
           consoleOut.push(
             `addColumn "${action.attributeName}" to table "${action.tableName}"`
           )
@@ -53,8 +51,8 @@ ${JSON.stringify(action.options)}
       case 'removeColumn':
         {
           const res = `{ fn: "removeColumn", params: ["${action.tableName}", "${action.columnName}"] }`
-          commandsUp.push(res)
 
+          commandsUp.push(res)
           consoleOut.push(
             `removeColumn "${action.columnName}" from table "${action.tableName}"`
           )
@@ -69,7 +67,6 @@ ${JSON.stringify(action.options)}
     ${propertyToStr(action.options)}
 ] }`
           commandsUp.push(res)
-
           consoleOut.push(
             `changeColumn "${action.attributeName}" on table "${action.tableName}"`
           )
@@ -91,6 +88,7 @@ ${JSON.stringify(action.options)}
             action.options.indexName !== ''
               ? `"${action.options.indexName}"`
               : JSON.stringify(action.fields)
+
           consoleOut.push(
             `addIndex ${nameOrAttrs} to table "${action.tableName}"`
           )
@@ -104,13 +102,12 @@ ${JSON.stringify(action.options)}
           action.options.indexName !== ''
             ? `"${action.options.indexName}"`
             : JSON.stringify(action.fields)
-
         const res = `{ fn: "removeIndex", params: [
           "${action.tableName}",
           ${nameOrAttrs}
       ] }`
-        commandsUp.push(res)
 
+        commandsUp.push(res)
         consoleOut.push(
           `removeIndex ${nameOrAttrs} from table "${action.tableName}"`
         )
@@ -126,42 +123,46 @@ ${JSON.stringify(action.options)}
 }
 
 const propertyToStr = obj => {
-  const vals: any[] = []
+  const values: string[] = []
 
   for (const k in obj) {
     if (k === 'seqType') {
-      vals.push(`"type": ${obj[k]}`)
+      values.push(`"type": ${obj[k]}`)
+
       continue
     }
 
     if (k === 'defaultValue') {
       if (obj[k].internal) {
-        vals.push(`"defaultValue": ${obj[k].value}`)
+        values.push(`"defaultValue": ${obj[k].value}`)
+
         continue
       }
 
       if (obj[k].notSupported) continue
 
       const x = {}
+
       x[k] = obj[k].value
-      vals.push(JSON.stringify(x).slice(1, -1))
+      values.push(JSON.stringify(x).slice(1, -1))
+
       continue
     }
 
     const x = {}
 
     x[k] = obj[k]
-    vals.push(JSON.stringify(x).slice(1, -1))
+    values.push(JSON.stringify(x).slice(1, -1))
   }
 
-  return `{ ${vals
+  return `{ ${values
     .filter(v => v !== '')
     .reverse()
     .join(', ')} }`
 }
 
 const getAttributes = attrs => {
-  const ret: any[] = []
+  const ret: string[] = []
 
   for (const attrName in attrs)
     ret.push(`      "${attrName}": ${propertyToStr(attrs[attrName])}`)
