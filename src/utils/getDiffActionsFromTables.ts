@@ -1,251 +1,239 @@
-// @ts-nocheck
-import { diff, Diff } from "deep-diff";
-import sortActions from "./sortActions";
+import { diff } from 'deep-diff'
+
+import { Json } from '../constants'
+import sortActions from './sortActions'
 
 export interface IAction {
   actionType:
-    | "createTable"
-    | "addIndex"
-    | "addColumn"
-    | "dropTable"
-    | "removeColumn"
-    | "removeIndex"
-    | "changeColumn";
-  tableName: string;
-  attributes?: any;
-  attributeName?: any;
-  options?: any;
-  columnName?: any;
-  fields?: any[];
-  depends: string[];
+    | 'createTable'
+    | 'addIndex'
+    | 'addColumn'
+    | 'dropTable'
+    | 'removeColumn'
+    | 'removeIndex'
+    | 'changeColumn'
+  tableName: string
+  attributes?: any
+  attributeName?: any
+  options?: any
+  columnName?: any
+  fields?: any[]
+  depends: string[]
 }
 
 export default function getDiffActionsFromTables(
-  previousStateTables,
-  currentStateTables
+  previousStateTables: Json,
+  currentStateTables: Json
 ) {
-  const actions: IAction[] = [];
-  let difference: Array<Diff<any, any>> = diff(
-    previousStateTables,
-    currentStateTables
-  );
+  const actions: IAction[] = []
+  const differences = diff(previousStateTables, currentStateTables)
 
-  if (difference === undefined) {
-    return actions;
-  }
+  if (!differences) return actions
 
-  difference.forEach((df) => {
+  console.log(differences)
+
+  differences.forEach(df => {
+    if (!df.path) throw new Error('Missing path')
+
     switch (df.kind) {
       // add new
-      case "N":
+      case 'N':
         {
           // new table created
           if (df.path.length === 1) {
-            const depends = [];
+            const depends: string[] = []
+            const tableName = df.rhs.tableName as string
 
-            const tableName = df.rhs.tableName;
             Object.values(df.rhs.schema).forEach((v: any) => {
-              if (v.references) {
-                depends.push(v.references.model);
-              }
-            });
+              if (v.references) depends.push(v.references.model as string)
+            })
 
             actions.push({
-              actionType: "createTable",
+              actionType: 'createTable',
               tableName,
               attributes: df.rhs.schema,
               options: {},
-              depends: depends,
-            });
+              depends
+            })
 
             // create indexes
-            if (df.rhs.indexes) {
-              for (const _i in df.rhs.indexes) {
-                const copied = JSON.parse(JSON.stringify(df.rhs.indexes[_i]));
+            if (df.rhs.indexes)
+              for (const i in df.rhs.indexes) {
+                const copied = JSON.parse(JSON.stringify(df.rhs.indexes[i]))
+
                 actions.push(
                   Object.assign(
                     {
-                      actionType: "addIndex",
+                      actionType: 'addIndex',
                       tableName,
-                      depends: [tableName],
+                      depends: [tableName]
                     },
                     copied
                   )
-                );
+                )
               }
-            }
-            break;
+
+            break
           }
 
-          const tableName = df.path[0];
-          const depends = [tableName];
+          const tableName = df.path[0]
+          const depends = [tableName]
 
-          if (df.path[1] === "schema") {
+          if (df.path[1] === 'schema') {
             // if (df.path.length === 3) - new field
             if (df.path.length === 3) {
               // new field
-              if (df.rhs && df.rhs.references) {
-                depends.push(df.rhs.references.model);
-              }
+              if (df.rhs && df.rhs.references)
+                depends.push(df.rhs.references.model)
+
               actions.push({
-                actionType: "addColumn",
-                tableName: tableName,
+                actionType: 'addColumn',
+                tableName,
                 attributeName: df.path[2],
                 options: df.rhs,
-                depends: depends,
-              });
-              break;
+                depends
+              })
+              break
             }
 
             // if (df.path.length > 3) - add new attribute to column (change col)
-            if (df.path.length > 3) {
-              if (df.path[1] === "schema") {
+            if (df.path.length > 3)
+              if (df.path[1] === 'schema') {
                 // new field attributes
-                const options =
-                  currentStateTables[tableName].schema[df.path[2]];
+                const options = currentStateTables[tableName].schema[df.path[2]]
 
-                if (options.references) {
-                  depends.push(options.references.nodel);
-                }
+                if (options.references) depends.push(options.references.nodel)
 
                 actions.push({
-                  actionType: "changeColumn",
-                  tableName: tableName,
+                  actionType: 'changeColumn',
+                  tableName,
                   attributeName: df.path[2],
-                  options: options,
-                  depends: depends,
-                });
-                break;
+                  options,
+                  depends
+                })
+                break
               }
-            }
           }
 
           // new index
-          if (df.path[1] === "indexes" && df.rhs) {
-            const tableName = df.path[0];
+          if (df.path[1] === 'indexes' && df.rhs) {
+            const tableName = df.path[0]
             const copied = df.rhs
               ? JSON.parse(JSON.stringify(df.rhs))
-              : undefined;
-            const index = copied;
+              : undefined
+            const index = copied
 
-            index.actionType = "addIndex";
-            index.tableName = tableName;
-            index.depends = [tableName];
-            actions.push(index);
-            break;
+            index.actionType = 'addIndex'
+            index.tableName = tableName
+            index.depends = [tableName]
+            actions.push(index)
+            break
           }
         }
-        break;
+        break
 
       // drop
-      case "D":
+      case 'D':
         {
-          const tableName = df.path[0];
+          const tableName = df.path[0]
 
           if (df.path.length === 1) {
             // drop table
-            const depends: string[] = [];
+            const depends: string[] = []
             Object.values(df.lhs.schema).forEach((v: any) => {
-              if (v.references) {
-                depends.push(v.references.model);
-              }
-            });
+              if (v.references) depends.push(v.references.model)
+            })
 
             actions.push({
-              actionType: "dropTable",
-              tableName: tableName,
-              depends: depends,
-            });
-            break;
+              actionType: 'dropTable',
+              tableName,
+              depends
+            })
+            break
           }
 
-          if (df.path[1] === "schema") {
+          if (df.path[1] === 'schema') {
             // if (df.path.length === 3) - drop field
             if (df.path.length === 3) {
               // drop column
               actions.push({
-                actionType: "removeColumn",
+                actionType: 'removeColumn',
                 tableName,
                 columnName: df.path[2],
-                depends: [tableName],
-              });
-              break;
+                depends: [tableName]
+              })
+              break
             }
 
             // if (df.path.length > 3) - drop attribute from column (change col)
             if (df.path.length > 3) {
-              const depends = [tableName];
+              const depends = [tableName]
               // new field attributes
-              const options = currentStateTables[tableName].schema[df.path[2]];
-              if (options.references) {
-                depends.push(options.references.model);
-              }
+              const options = currentStateTables[tableName].schema[df.path[2]]
+              if (options.references) depends.push(options.references.model)
 
               actions.push({
-                actionType: "changeColumn",
+                actionType: 'changeColumn',
                 tableName,
                 attributeName: df.path[2],
                 options,
-                depends,
-              });
-              break;
+                depends
+              })
+              break
             }
           }
 
-          if (df.path[1] === "indexes" && df.lhs) {
+          if (df.path[1] === 'indexes' && df.lhs) {
             actions.push({
-              actionType: "removeIndex",
+              actionType: 'removeIndex',
               tableName,
               fields: df.lhs.fields,
               options: df.lhs.options,
-              depends: [tableName],
-            });
-            break;
+              depends: [tableName]
+            })
+            break
           }
         }
-        break;
+        break
 
       // edit
-      case "E":
+      case 'E':
         {
-          const tableName = df.path[0];
-          const depends = [tableName];
+          const tableName = df.path[0]
+          const depends = [tableName]
 
-          if (df.path[1] === "schema") {
+          if (df.path[1] === 'schema') {
             // new field attributes
-            const options = currentStateTables[tableName].schema[df.path[2]];
-            if (options.references) {
-              depends.push(options.references.nodel);
-            }
+            const options = currentStateTables[tableName].schema[df.path[2]]
+            if (options.references) depends.push(options.references.nodel)
 
             actions.push({
-              actionType: "changeColumn",
+              actionType: 'changeColumn',
               tableName,
               attributeName: df.path[2],
               options,
-              depends,
-            });
+              depends
+            })
           }
         }
-        break;
+        break
 
       // array change indexes
-      case "A":
-        {
-          console.log(
-            "[Not supported] Array model changes! Problems are possible. Please, check result more carefully!"
-          );
-          console.log("[Not supported] Difference: ");
-          console.log(JSON.stringify(df, null, 4));
-        }
-        break;
+      case 'A':
+        console.log(
+          '[Not supported] Array model changes! Problems are possible. Please, check result more carefully!'
+        )
+        console.log('[Not supported] Difference: ')
+        console.log(JSON.stringify(df, null, 4))
+        break
 
       default:
         // code
-        break;
+        break
     }
-  });
-  const result = sortActions(actions);
+  })
 
-  return result;
+  const result = sortActions(actions)
+
+  return result
 }

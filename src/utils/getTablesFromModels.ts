@@ -1,98 +1,92 @@
-import { Sequelize } from "sequelize-typescript";
-import { ModelCtor, Model, ModelAttributeColumnOptions } from "sequelize/types";
-import reverseSequelizeColType from "./reverseSequelizeColType";
-import reverseSequelizeDefValueType from "./reverseSequelizeDefValueType";
-import parseIndex from "./parseIndex";
+import { Sequelize } from 'sequelize-typescript'
+import { ModelCtor, Model, ModelAttributeColumnOptions } from 'sequelize/types'
+import reverseSequelizeColType from './reverseSequelizeColType'
+import reverseSequelizeDefValueType from './reverseSequelizeDefValueType'
+import parseIndex from './parseIndex'
 
 export default function reverseModels(
   sequelize: Sequelize,
   models: {
-    [key: string]: ModelCtor<Model>;
+    [key: string]: ModelCtor<Model>
   }
 ) {
-  const tables = {};
-  for (let [modelKey, model] of Object.entries(models)) {
+  const tables = {}
+  for (const [, model] of Object.entries(models)) {
     const attributes: {
-      [key: string]: ModelAttributeColumnOptions;
-    } = model.rawAttributes;
+      [key: string]: ModelAttributeColumnOptions
+    } = model.rawAttributes
 
-    const resultAttributes = {};
+    const resultAttributes = {}
 
-    for (let [column, attribute] of Object.entries(attributes)) {
-      let rowAttribute = {};
+    for (const [column, attribute] of Object.entries(attributes)) {
+      let rowAttribute: { [x: string]: unknown } = {}
 
       if (attribute.defaultValue) {
-        const _val = reverseSequelizeDefValueType(attribute.defaultValue);
+        const _val = reverseSequelizeDefValueType(attribute.defaultValue)
         if (_val.notSupported) {
           console.log(
             `[Not supported] Skip defaultValue column of attribute ${model}:${column}`
-          );
-          continue;
+          )
+          continue
         }
-        rowAttribute["defaultValue"] = _val;
+        rowAttribute.defaultValue = _val
       }
 
       if (attribute.type === undefined) {
         console.log(
           `[Not supported] Skip column with undefined type ${model}:${column}`
-        );
-        continue;
+        )
+        continue
       }
 
-      const seqType: string = reverseSequelizeColType(
-        sequelize,
-        attribute.type
-      );
-      if (seqType === "Sequelize.VIRTUAL") {
+      const seqType: string = reverseSequelizeColType(sequelize, attribute.type)
+      if (seqType === 'Sequelize.VIRTUAL') {
         console.log(
           `[SKIP] Skip Sequelize.VIRTUAL column "${column}"", defined in model "${model}"`
-        );
-        continue;
+        )
+        continue
       }
 
       rowAttribute = {
-        seqType: seqType,
-      };
+        seqType
+      }
+      ;[
+        'allowNull',
+        'unique',
+        'primaryKey',
+        'autoIncrement',
+        'autoIncrementIdentity',
+        'comment',
+        'references',
+        'onUpdate',
+        'onDelete'
+        // "validate",
+      ].forEach(key => {
+        if (attribute[key] !== undefined) rowAttribute[key] = attribute[key]
+      })
 
-      [
-        "allowNull",
-        "unique",
-        "primaryKey",
-        "autoIncrement",
-        "autoIncrementIdentity",
-        "comment",
-        "references",
-        "onUpdate",
-        "onDelete",
-        //"validate",
-      ].forEach((key) => {
-        if (attribute[key] !== undefined) {
-          rowAttribute[key] = attribute[key];
-        }
-      });
-
-      resultAttributes[column] = rowAttribute;
+      resultAttributes[column] = rowAttribute
     } // attributes in model
 
     tables[model.tableName] = {
       tableName: model.tableName,
-      schema: resultAttributes,
-    };
+      schema: resultAttributes
+    }
 
-    let idx_out = {};
+    const indexOut: { [x: string]: unknown } = {}
     if (
       model.options &&
       model.options.indexes &&
       model.options.indexes.length > 0
-    ) {
+    )
       for (const _i in model.options.indexes) {
-        const index = parseIndex(model.options.indexes[_i]);
-        idx_out[`${index["hash"]}`] = index;
-        delete index["hash"];
+        const index = parseIndex(model.options.indexes[_i])
+        indexOut[`${index.hash}`] = index
+        delete index.hash
       }
-    }
-    tables[model.tableName].indexes = idx_out;
+
+    tables[model.tableName].indexes = indexOut
   } // model in models
 
-  return tables;
+  return tables
 }
