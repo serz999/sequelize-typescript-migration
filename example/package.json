@@ -1,15 +1,20 @@
 {
   "scripts": {
     "build": "tsc",
-    "practice": "ts-node -T -r tsconfig-paths/register practice.ts"
+    "practice": "ts-node -T -r tsconfig-paths/register practice.ts",
+    "db:init": "sequelize init",
+    "db:create": "sequelize db:create",
+    "db:migrate": "sequelize db:migrate"
   },
   "dependencies": {
-    "typescript": "^4.3.4",
-    "sequelize": "^6.6.2",
-    "sequelize-typescript": "^2.1.0"
+    "dotenv": "^16.0.1",
+    "pg": "^8.7.3",
+    "sequelize": "^6.7.0",
+    "sequelize-cli": "^6.2.1",
+    "sequelize-typescript": "^2.1.1",
+    "typescript": "^4.3.5"
   },
   "devDependencies": {
-    "sequelize-cli": "^6.2.0",
     "ts-node": "^10.0.0"
   }
 }

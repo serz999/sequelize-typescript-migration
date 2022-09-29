@@ -4,6 +4,13 @@
 
 - Use it from [here](https://www.npmjs.com/package/sequelize-typescript-migration-lts) by the name of `sequelize-typescript-migration-lts`
 
+#### Tutorial
+
+[youtube video](https://www.youtube.com/embed/bBv75hssPKk)
+
+[![video](https://img.youtube.com/vi/bBv75hssPKk/0.jpg)](https://www.youtube.com/embed/bBv75hssPKk)
+
+
 #### Installation
 
 ```js

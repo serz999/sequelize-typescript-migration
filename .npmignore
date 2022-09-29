@@ -2,7 +2,6 @@ src/
 
 .git/
 
-
 node_modules/
 
 typings

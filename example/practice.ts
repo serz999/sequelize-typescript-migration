@@ -1,27 +1,35 @@
-import { SequelizeTypescriptMigration } from "../../sequelize-typescript-migration";
-import { Sequelize } from "sequelize-typescript";
-import * as path from "path";
-import { Car } from "models/car.model";
-import { CarBrand } from "models/car_brand.model";
+/* eslint-disable import/extensions */
+import { SequelizeTypescriptMigration } from '../src'
+import { Sequelize } from 'sequelize-typescript'
+import { join } from 'path'
+import { Dialect } from 'sequelize/types'
+import dotenv from 'dotenv'
+
+import { Car } from 'models/car.model'
+import { CarBrand } from 'models/car_brand.model'
+
+dotenv.config()
 
 const bootstrap = async () => {
   const sequelize: Sequelize = new Sequelize({
-    username: "kimjbstar",
-    password: "12091457",
-    database: "test_migration2",
-    host: "localhost",
-    dialect: "mysql",
+    username: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASS,
+    database: process.env.DATABASE_NAME,
+    host: process.env.DATABASE_HOST,
+    dialect: process.env.DATABASE_DIALECT as Dialect,
     models: [CarBrand, Car],
-    timezone: "+09:00",
-    logging: false,
-  });
+    timezone: process.env.DATABASE_TIMEZONE,
+    logging: false
+  })
   try {
     const result = await SequelizeTypescriptMigration.makeMigration(sequelize, {
-      outDir: path.join(__dirname, "./migrations"),
-    });
-    console.log(result);
+      outDir: join(__dirname, './db/migrations'),
+      migrationName: 'init'
+    })
+    console.log(result)
   } catch (e) {
-    console.log(e);
+    console.log(e)
   }
-};
-bootstrap();
+}
+
+bootstrap()
