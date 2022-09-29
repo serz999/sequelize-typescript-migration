@@ -27,7 +27,6 @@ export default function reverseModels(
           console.log(
             `[Not supported] Skip defaultValue column of attribute ${model}:${column}`
           )
-          continue
         }
         rowAttribute.defaultValue = _val
       }
