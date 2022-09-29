@@ -1,6 +1,6 @@
 {
   "name": "sequelize-typescript-migration-lts",
-  "version": "3.1.5",
+  "version": "3.2.3",
   "description": "migration tool for sequelize & typescript users",
   "keywords": [
     "sequelize",
@@ -24,7 +24,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "packlist": "npx npm-packlist",
-    "lint": "eslint src/* --ext .ts --fix && eslint example/* --ext .js,.ts --fix"
+    "lint": "eslint --ext .ts ."
   },
   "bin": {
     "sequelize-typescript-migration": "dist/index.js"
@@ -41,9 +41,8 @@
     "js-beautify": "^1.14.0",
     "mysql2": "^2.3.3",
     "reflect-metadata": "^0.1.13",
-    "sequelize": "^6.17.0",
-    "sequelize-typescript": "^2.1.3",
-    "typescript": "^4.6.3"
+    "sequelize": "^6.23.2",
+    "sequelize-typescript": "^2.1.3"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",
@@ -52,18 +51,20 @@
     "@types/js-beautify": "^1.13.3",
     "@types/node": "^17.0.23",
     "@types/validator": "^13.7.2",
-    "@typescript-eslint/eslint-plugin": "^5.30.7",
-    "@typescript-eslint/parser": "^5.30.7",
+    "@typescript-eslint/eslint-plugin": "^5.38.1",
+    "@typescript-eslint/parser": "^5.38.1",
     "dotenv": "^16.0.1",
-    "eslint": "^8.20.0",
+    "eslint": "^8.24.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.2.4",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-promise": "^6.0.0",
+    "prettier": "^2.7.1",
     "ts-node": "^10.7.0",
-    "tsconfig-paths": "^3.14.1"
+    "tsconfig-paths": "^3.14.1",
+    "typescript": "^4.8.4"
   },
   "engines": {
     "node": ">=12"

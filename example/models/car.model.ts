@@ -1,22 +1,22 @@
-/* eslint-disable import/extensions, no-use-before-define */
 import {
   Table,
   Model,
   Column,
   ForeignKey,
-  BelongsTo
-} from 'sequelize-typescript'
-import { CarBrand } from './car_brand.model'
+  BelongsTo,
+} from "sequelize-typescript";
+
+import { CarBrand } from "./car_brand.model";
 
 @Table
 export class Car extends Model<Car> {
   @Column
-  name!: string
+  name!: string;
 
   @ForeignKey(() => CarBrand)
   @Column
-  carBrandId!: number
+  carBrandId!: number;
 
   @BelongsTo(() => CarBrand)
-  carBrand!: CarBrand
+  carBrand!: CarBrand;
 }

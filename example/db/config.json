@@ -2,7 +2,7 @@
   "development": {
     "username": "postgres",
     "password": "6939",
-    "database": "database_development",
+    "database": "STM",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },

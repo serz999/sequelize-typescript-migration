@@ -1,117 +1,117 @@
 export default function getMigration(actions) {
-  const commandsUp: string[] = []
-  const commandsDown: string[] = []
-  const consoleOut: string[] = []
+  const commandsUp: string[] = [];
+  const commandsDown: string[] = [];
+  const consoleOut: string[] = [];
 
   for (const i in actions) {
-    const action = actions[i]
+    const action = actions[i];
 
     switch (action.actionType) {
-      case 'createTable':
+      case "createTable":
         {
           const resUp = `
 { fn: "createTable", params: [
 "${action.tableName}",
 ${getAttributes(action.attributes)},
 ${JSON.stringify(action.options)}
-] }`
-          commandsUp.push(resUp)
+] }`;
+          commandsUp.push(resUp);
           consoleOut.push(
             `createTable "${action.tableName}", deps: [${action.depends.join(
-              ', '
+              ", "
             )}]`
-          )
+          );
         }
-        break
+        break;
 
-      case 'dropTable':
+      case "dropTable":
         {
-          const res = `{ fn: "dropTable", params: ["${action.tableName}"] }`
+          const res = `{ fn: "dropTable", params: ["${action.tableName}"] }`;
 
-          commandsUp.push(res)
-          consoleOut.push(`dropTable "${action.tableName}"`)
+          commandsUp.push(res);
+          consoleOut.push(`dropTable "${action.tableName}"`);
         }
-        break
+        break;
 
-      case 'addColumn':
+      case "addColumn":
         {
           const resUp = `{ fn: "addColumn", params: [
     "${action.tableName}",
     "${action.attributeName}",
     ${propertyToStr(action.options)}
-] }`
+] }`;
 
-          commandsUp.push(resUp)
+          commandsUp.push(resUp);
           consoleOut.push(
             `addColumn "${action.attributeName}" to table "${action.tableName}"`
-          )
+          );
         }
-        break
+        break;
 
-      case 'removeColumn':
+      case "removeColumn":
         {
-          const res = `{ fn: "removeColumn", params: ["${action.tableName}", "${action.columnName}"] }`
+          const res = `{ fn: "removeColumn", params: ["${action.tableName}", "${action.columnName}"] }`;
 
-          commandsUp.push(res)
+          commandsUp.push(res);
           consoleOut.push(
             `removeColumn "${action.columnName}" from table "${action.tableName}"`
-          )
+          );
         }
-        break
+        break;
 
-      case 'changeColumn':
+      case "changeColumn":
         {
           const res = `{ fn: "changeColumn", params: [
     "${action.tableName}",
     "${action.attributeName}",
     ${propertyToStr(action.options)}
-] }`
-          commandsUp.push(res)
+] }`;
+          commandsUp.push(res);
           consoleOut.push(
             `changeColumn "${action.attributeName}" on table "${action.tableName}"`
-          )
+          );
         }
-        break
+        break;
 
-      case 'addIndex':
+      case "addIndex":
         {
           const res = `{ fn: "addIndex", params: [
     "${action.tableName}",
     ${JSON.stringify(action.fields)},
     ${JSON.stringify(action.options)}
-] }`
-          commandsUp.push(res)
+] }`;
+          commandsUp.push(res);
 
           const nameOrAttrs =
             action.options &&
             action.options.indexName &&
-            action.options.indexName !== ''
+            action.options.indexName !== ""
               ? `"${action.options.indexName}"`
-              : JSON.stringify(action.fields)
+              : JSON.stringify(action.fields);
 
           consoleOut.push(
             `addIndex ${nameOrAttrs} to table "${action.tableName}"`
-          )
+          );
         }
-        break
+        break;
 
-      case 'removeIndex': {
+      case "removeIndex": {
         const nameOrAttrs =
           action.options &&
           action.options.indexName &&
-          action.options.indexName !== ''
+          action.options.indexName !== ""
             ? `"${action.options.indexName}"`
-            : JSON.stringify(action.fields)
+            : JSON.stringify(action.fields);
         const res = `{ fn: "removeIndex", params: [
           "${action.tableName}",
           ${nameOrAttrs}
-      ] }`
+      ] }`;
 
-        commandsUp.push(res)
+        commandsUp.push(res);
         consoleOut.push(
           `removeIndex ${nameOrAttrs} from table "${action.tableName}"`
-        )
-        break
+        );
+        break;
       }
 
       default:
@@ -119,53 +119,53 @@ ${JSON.stringify(action.options)}
     }
   }
 
-  return { commandsUp, commandsDown, consoleOut }
+  return { commandsUp, commandsDown, consoleOut };
 }
 
-const propertyToStr = obj => {
-  const values: string[] = []
+const propertyToStr = (obj) => {
+  const values: string[] = [];
 
   for (const k in obj) {
-    if (k === 'seqType') {
-      values.push(`"type": ${obj[k]}`)
+    if (k === "seqType") {
+      values.push(`"type": ${obj[k]}`);
 
-      continue
+      continue;
     }
 
-    if (k === 'defaultValue') {
+    if (k === "defaultValue") {
       if (obj[k].internal) {
-        values.push(`"defaultValue": ${obj[k].value}`)
+        values.push(`"defaultValue": ${obj[k].value}`);
 
-        continue
+        continue;
       }
 
-      if (obj[k].notSupported) continue
+      if (obj[k].notSupported) continue;
 
-      const x = {}
+      const x = {};
 
-      x[k] = obj[k].value
-      values.push(JSON.stringify(x).slice(1, -1))
+      x[k] = obj[k].value;
+      values.push(JSON.stringify(x).slice(1, -1));
 
-      continue
+      continue;
     }
 
-    const x = {}
+    const x = {};
 
-    x[k] = obj[k]
-    values.push(JSON.stringify(x).slice(1, -1))
+    x[k] = obj[k];
+    values.push(JSON.stringify(x).slice(1, -1));
   }
 
   return `{ ${values
-    .filter(v => v !== '')
+    .filter((v) => v !== "")
     .reverse()
-    .join(', ')} }`
-}
+    .join(", ")} }`;
+};
 
-const getAttributes = attrs => {
-  const ret: string[] = []
+const getAttributes = (attrs) => {
+  const ret: string[] = [];
 
   for (const attrName in attrs)
-    ret.push(`      "${attrName}": ${propertyToStr(attrs[attrName])}`)
+    ret.push(`      "${attrName}": ${propertyToStr(attrs[attrName])}`);
 
-  return ` { \n${ret.join(', \n')}\n     }`
-}
+  return ` { \n${ret.join(", \n")}\n     }`;
+};

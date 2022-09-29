@@ -1,21 +1,20 @@
-/* eslint-disable no-use-before-define */
-import { Table, Model, Column, Default, DataType } from 'sequelize-typescript'
+import { Table, Model, Column, Default, DataType } from "sequelize-typescript";
 
 @Table
 export class CarBrand extends Model<CarBrand> {
   @Column
-  name!: string
+  name!: string;
 
   @Default(true)
   @Column(DataType.BOOLEAN)
-  isCertified!: boolean
+  isCertified!: boolean;
 
   @Column
-  imgUrl!: string
+  imgUrl!: string;
 
   @Column
-  orderNo!: number
+  orderNo!: number;
 
   @Column
-  carsCount!: number
+  carsCount!: number;
 }

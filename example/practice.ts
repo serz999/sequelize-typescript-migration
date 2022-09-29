@@ -1,14 +1,13 @@
-/* eslint-disable import/extensions */
-import { SequelizeTypescriptMigration } from '../src'
-import { Sequelize } from 'sequelize-typescript'
-import { join } from 'path'
-import { Dialect } from 'sequelize/types'
-import dotenv from 'dotenv'
+import { SequelizeTypescriptMigration } from "../src";
+import { Sequelize } from "sequelize-typescript";
+import { join } from "path";
+import dotenv from "dotenv";
 
-import { Car } from 'models/car.model'
-import { CarBrand } from 'models/car_brand.model'
+import { Car } from "models/car.model";
+import { CarBrand } from "models/car_brand.model";
+import { Dialect } from "sequelize";
 
-dotenv.config()
+dotenv.config();
 
 const bootstrap = async () => {
   const sequelize: Sequelize = new Sequelize({
@@ -19,17 +18,17 @@ const bootstrap = async () => {
     dialect: process.env.DATABASE_DIALECT as Dialect,
     models: [CarBrand, Car],
     timezone: process.env.DATABASE_TIMEZONE,
-    logging: false
-  })
+    logging: false,
+  });
   try {
     const result = await SequelizeTypescriptMigration.makeMigration(sequelize, {
-      outDir: join(__dirname, './db/migrations'),
-      migrationName: 'init'
-    })
-    console.log(result)
+      outDir: join(__dirname, "./db/migrations"),
+      migrationName: "init",
+    });
+    console.log(result);
   } catch (e) {
-    console.log(e)
+    console.log(e);
   }
-}
+};
 
-bootstrap()
+bootstrap();
