@@ -117,14 +117,14 @@ export default function reverseSequelizeColType(
 
   // ARRAY ( PostgreSQL only )
   if (attrType.constructor.name === "ARRAY") {
-    const innerType = reverseSequelizeColType(sequelize, attrType);
+    const innerType = reverseSequelizeColType(sequelize, attrType.type);
 
     return `${prefix}ARRAY(${innerType})`;
   }
 
   // RANGE ( PostgreSQL only )
   if (attrType.constructor.name === "RANGE") {
-    const innerType = reverseSequelizeColType(sequelize, attrType);
+    const innerType = reverseSequelizeColType(sequelize, attrType.type);
 
     return `${prefix}RANGE(${innerType})`;
   }
