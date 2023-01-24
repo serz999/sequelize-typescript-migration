@@ -4,7 +4,7 @@
 
 - Use it from [here](https://www.npmjs.com/package/sequelize-typescript-migration-lts) by the name of `sequelize-typescript-migration-lts`
 
-- Join [slack channel](https://mmroshani-os.slack.com) for talk.
+- Here is the [Github discussion](https://github.com/mmRoshani/sequelize-typescript-migration/discussions), any ideas/improves are very welcome.
 
 #### Tutorial
 
