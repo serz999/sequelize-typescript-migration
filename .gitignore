@@ -73,3 +73,6 @@ dist/
 #ide
 .idea/*
 .vscode/*
+
+example/db/migrations/
+example/db/config.json
