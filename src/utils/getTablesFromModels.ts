@@ -1,18 +1,22 @@
 import type {
   Model,
   ModelAttributeColumnOptions,
-  ModelCtor,
+  ModelStatic
 } from "sequelize/types";
 import type { Sequelize } from "sequelize-typescript";
+import { makeColumnName } from "./makeColumnName";
 import parseIndex from "./parseIndex";
 import reverseSequelizeColType from "./reverseSequelizeColType";
 import reverseSequelizeDefValueType from "./reverseSequelizeDefValueType";
 
+export type ReverseModelsOptions = {
+  useSnakeCase?: boolean;
+}
+
 export default function reverseModels(
   sequelize: Sequelize,
-  models: {
-    [key: string]: ModelCtor<Model>;
-  }
+  models: Record<string, ModelStatic<Model>>,
+  options: ReverseModelsOptions = {},
 ) {
   const tables = {};
   for (const [, model] of Object.entries(models)) {
@@ -71,7 +75,7 @@ export default function reverseModels(
         if (attribute[key] !== undefined) rowAttribute[key] = attribute[key];
       });
 
-      resultAttributes[column] = rowAttribute;
+      resultAttributes[makeColumnName(column, options.useSnakeCase)] = rowAttribute;
     } // attributes in model
 
     tables[model.tableName] = {

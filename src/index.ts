@@ -8,10 +8,10 @@ import createMigrationTable from "./utils/createMigrationTable";
 import getDiffActionsFromTables from "./utils/getDiffActionsFromTables";
 import getLastMigrationState from "./utils/getLastMigrationState";
 import getMigration from "./utils/getMigration";
-import getTablesFromModels from "./utils/getTablesFromModels";
+import getTablesFromModels, { ReverseModelsOptions } from "./utils/getTablesFromModels";
 import writeMigration from "./utils/writeMigration";
 
-export interface IMigrationOptions {
+export type IMigrationOptions = {
   /**
    * directory where migration file saved. We recommend that you specify this path to sequelize migration path.
    */
@@ -31,8 +31,9 @@ export interface IMigrationOptions {
    * comment of migration.
    */
   comment?: string;
+
   debug?: boolean;
-}
+} & ReverseModelsOptions
 
 export class SequelizeTypescriptMigration {
   /**
@@ -72,7 +73,7 @@ export class SequelizeTypescriptMigration {
     };
     const currentState: MigrationState = {
       revision: (previousState.revision || 0) + 1,
-      tables: getTablesFromModels(sequelize, models),
+      tables: getTablesFromModels(sequelize, models, options),
     };
 
     const upActions = getDiffActionsFromTables(

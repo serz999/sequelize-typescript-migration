@@ -2,9 +2,14 @@
   "scripts": {
     "build": "tsc",
     "practice": "ts-node -T -r tsconfig-paths/register practice.ts",
+    "configure": "cp db/config.example.json db/config.json",
     "db:init": "sequelize init",
     "db:create": "sequelize db:create",
-    "db:migrate": "sequelize db:migrate"
+    "db:drop": "sequelize db:drop",
+    "db:migrate": "sequelize db:migrate",
+    "db:migrate:create": "ts-node -T -r tsconfig-paths/register practice.ts",
+    "db:migrate:undo": "sequelize db:migrate:undo",
+    "db:migrate:undo:all": "sequelize db:migrate:undo:all"
   },
   "dependencies": {
     "dotenv": "^16.0.1",
