@@ -11,6 +11,8 @@ import getMigration from "./utils/getMigration";
 import getTablesFromModels, { ReverseModelsOptions } from "./utils/getTablesFromModels";
 import writeMigration from "./utils/writeMigration";
 
+type PreventOpt = {[action: string]: string[]}
+
 export type IMigrationOptions = {
   /**
    * directory where migration file saved. We recommend that you specify this path to sequelize migration path.
@@ -33,6 +35,9 @@ export type IMigrationOptions = {
   comment?: string;
 
   debug?: boolean;
+
+  createVersioningTrigger?: boolean;
+
 } & ReverseModelsOptions
 
 export class SequelizeTypescriptMigration {
@@ -47,6 +52,7 @@ export class SequelizeTypescriptMigration {
     options: IMigrationOptions
   ) => {
     options.preview = options.preview || false;
+    options.createVersioningTrigger = options.createVersioningTrigger || false;
 
     if (!existsSync(options.outDir))
       return Promise.reject(

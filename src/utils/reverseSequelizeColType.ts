@@ -4,7 +4,7 @@ export default function reverseSequelizeColType(
   sequelize: Sequelize,
   attrType: any | never,
   prefix = "Sequelize."
-) {
+) { 
   if (attrType.constructor.name === "VIRTUAL") return `${prefix}VIRTUAL`;
 
   if (attrType.constructor.name === "CHAR") {
@@ -117,14 +117,16 @@ export default function reverseSequelizeColType(
 
   // ARRAY ( PostgreSQL only )
   if (attrType.constructor.name === "ARRAY") {
-    const innerType = reverseSequelizeColType(sequelize, attrType.type);
+    const innerTypeSeq = attrType.type;
+    const innerType = reverseSequelizeColType(sequelize, innerTypeSeq);
 
     return `${prefix}ARRAY(${innerType})`;
   }
 
   // RANGE ( PostgreSQL only )
   if (attrType.constructor.name === "RANGE") {
-    const innerType = reverseSequelizeColType(sequelize, attrType.type);
+    const innerTypeSeq = attrType.options.subtype;
+    const innerType = reverseSequelizeColType(sequelize, innerTypeSeq);
 
     return `${prefix}RANGE(${innerType})`;
   }

@@ -23,8 +23,7 @@
     "noImplicitAny": false,
     "sourceMap": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "charset": "utf8"
+    "emitDecoratorMetadata": true
   },
   "include": [
     "./src/**/*.ts"

@@ -2,12 +2,7 @@ export interface Json {
   [key: string]: any;
 }
 
-export interface MigrationState {
-  revision?: number;
-  version?: number;
-  tables: Json;
-}
-
+// aka SequelizeMeta table
 export interface SequelizeMigrations {
   name: string;
   date: Date;
@@ -18,4 +13,10 @@ export interface SequelizeMigrationsMeta {
   name: string;
   state: MigrationState;
   date: Date;
+}
+
+export interface MigrationState {
+  revision?: number;
+  version?: number;
+  tables: Json;
 }
