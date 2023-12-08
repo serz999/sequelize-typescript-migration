@@ -21,10 +21,49 @@ export interface IAction {
   depends: string[];
 }
 
+export type IgnoreOpt = {
+    N?: ActIgnoreOpt,
+    D?: ActIgnoreOpt,
+    E?: ActIgnoreOpt, 
+}
+
+export type ActIgnoreOpt = {
+    fields?: string[]
+}
+
+function validateIgnoreOpt(ignore: IgnoreOpt) { 
+  if (!ignore.N) {
+     ignore.N = {} 
+  }
+  if (!ignore.D) {
+     ignore.D = {} 
+  }
+  if (!ignore.E) {
+     ignore.E = {} 
+  }
+  if (!ignore.N.fields) {
+    ignore.N.fields = []
+  }
+  if (!ignore.D.fields) {
+    ignore.D.fields = []
+  }
+  if (!ignore.E.fields) {
+    ignore.E.fields = []
+  }  
+}
+
+type getDiffOpt = {
+    ignore?: IgnoreOpt
+}
+
 export default function getDiffActionsFromTables(
   previousStateTables: Json,
-  currentStateTables: Json
+  currentStateTables: Json,
+  getDiffOpt: getDiffOpt = {}, 
 ) {
+  getDiffOpt.ignore = getDiffOpt.ignore ?? {} 
+  validateIgnoreOpt(getDiffOpt.ignore)
+
   const actions: IAction[] = [];
   const differences = diff(previousStateTables, currentStateTables);
 
@@ -75,7 +114,7 @@ export default function getDiffActionsFromTables(
           const tableName = df.path[0];
           const depends = [tableName];
 
-          if (df.path[1] === "schema") {
+          if (df.path[1] === "schema" && !getDiffOpt.ignore?.N?.fields?.includes(df.path[2])) {
             // if (df.path.length === 3) - new field
             if (df.path.length === 3) {
               // new field
@@ -149,7 +188,7 @@ export default function getDiffActionsFromTables(
             break;
           }
 
-          if (df.path[1] === "schema") {
+          if (df.path[1] === "schema" && !getDiffOpt.ignore?.D?.fields?.includes(df.path[2])) {
             // if (df.path.length === 3) - drop field
             if (df.path.length === 3) {
               // drop column
@@ -199,7 +238,7 @@ export default function getDiffActionsFromTables(
           const tableName = df.path[0];
           const depends = [tableName];
 
-          if (df.path[1] === "schema") {
+          if (df.path[1] === "schema" && !getDiffOpt.ignore?.E?.fields?.includes(df.path[2])) {
             // new field attributes
             const options = currentStateTables[tableName].schema[df.path[2]];
             if (options.references) depends.push(options.references.nodel);

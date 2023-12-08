@@ -5,7 +5,7 @@ import type { Sequelize } from "sequelize-typescript";
 
 import type { MigrationState } from "./constants";
 import createMigrationTable from "./utils/createMigrationTable";
-import getDiffActionsFromTables from "./utils/getDiffActionsFromTables";
+import getDiffActionsFromTables, { IgnoreOpt } from "./utils/getDiffActionsFromTables";
 import getLastMigrationState from "./utils/getLastMigrationState";
 import getMigration from "./utils/getMigration";
 import getTablesFromModels, { ReverseModelsOptions } from "./utils/getTablesFromModels";
@@ -37,6 +37,8 @@ export type IMigrationOptions = {
   debug?: boolean;
 
   createVersioningTrigger?: boolean;
+  historyTablePostfix?: string;
+  historyPeriodFieldName?: string;
 
 } & ReverseModelsOptions
 
@@ -53,6 +55,8 @@ export class SequelizeTypescriptMigration {
   ) => {
     options.preview = options.preview || false;
     options.createVersioningTrigger = options.createVersioningTrigger || false;
+    options.historyTablePostfix = options.historyTablePostfix ?? '__history';
+    options.historyPeriodFieldName = options.historyPeriodFieldName ?? '_period';
 
     if (!existsSync(options.outDir))
       return Promise.reject(
@@ -82,13 +86,25 @@ export class SequelizeTypescriptMigration {
       tables: getTablesFromModels(sequelize, models, options),
     };
 
+    const ignoreUp: IgnoreOpt = {N: {fields: []}, D: {fields: []}, E: {fields: []}}
+    const ignoreDown: IgnoreOpt = {N: {fields: []}, D: {fields: []}, E: {fields: []}} 
+    if (options.createVersioningTrigger) {
+        // Protect history data
+        ignoreUp["D"]?.fields?.push(options.historyPeriodFieldName) 
+        ignoreDown["N"]?.fields?.push(options.historyPeriodFieldName) 
+    }
+    
     const upActions = getDiffActionsFromTables(
       previousState.tables,
-      currentState.tables
+      currentState.tables, {
+        ignore: ignoreUp     
+      } 
     );
     const downActions = getDiffActionsFromTables(
       currentState.tables,
-      previousState.tables
+      previousState.tables, {
+          ignore: ignoreDown
+      }  
     );
 
     const migration = getMigration(upActions);

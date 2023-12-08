@@ -1,10 +1,11 @@
 import * as fs from "fs";
 import beautify from "js-beautify";
 import * as path from "path";
+import { IMigrationOptions } from "..";
 
 import removeCurrentRevisionMigrations from "./removeCurrentRevisionMigrations";
 
-export default async function writeMigration(currentState, migration, options) {
+export default async function writeMigration(currentState, migration, options: IMigrationOptions) {
   await removeCurrentRevisionMigrations(
     currentState.revision,
     options.outDir,
@@ -20,17 +21,27 @@ export default async function writeMigration(currentState, migration, options) {
 
   myState = myState.replace(searchRegExp, replaceWith);
 
+  let fillPeriodColumn = '';
   let createTriggerTemplate = '';
-  const HISTORY_TABLE_POSTFIX = "__history"
   if (options.createVersioningTrigger) {
+      fillPeriodColumn =`
+        .then(() => { 
+            if (command.fn === "addColumn" && command.params[1] === "${options.historyPeriodFieldName}") {
+                queryInterface.sequelize.query(\`
+                    UPDATE "\${command.params[0]}"
+                    SET \${command.params[1]} = '[\${new Date(Date.now()).toISOString()},)';
+                \`)
+            } 
+          }, reject)
+      ` 
       createTriggerTemplate = `
         .then(() => { 
-            if (command.fn === "createTable" && command.params[0].endsWith('${HISTORY_TABLE_POSTFIX}')) {
+            if (command.fn === "createTable" && command.params[0].endsWith("${options.historyTablePostfix}")) {
                 queryInterface.sequelize.query(\`
                     CREATE EXTENSION IF NOT EXISTS temporal_tables;
-                    CREATE TRIGGER versioning_trigger
-                    BEFORE INSERT OR UPDATE OR DELETE ON "\${command.params[0].replace("${HISTORY_TABLE_POSTFIX}", "")}" 
-                    FOR EACH ROW EXECUTE PROCEDURE versioning('_period','"\${command.params[0]}"', true);     
+                    CREATE OR REPLACE TRIGGER versioning_trigger
+                    BEFORE INSERT OR UPDATE OR DELETE ON "\${command.params[0].replace("${options.historyTablePostfix}", "")}" 
+                    FOR EACH ROW EXECUTE PROCEDURE versioning('${options.historyPeriodFieldName}','"\${command.params[0]}"', true); 
                 \`)
             } 
           }, reject)
@@ -144,7 +155,9 @@ module.exports = {
           console.log("[#"+index+"] execute: " + command.fn);
           index++;
           queryInterface[command.fn].apply(queryInterface, command.params)
-          ${createTriggerTemplate}.then(next, reject);
+          ${fillPeriodColumn}
+          ${createTriggerTemplate}
+          .then(next, reject);
         } else resolve();
       }
 
