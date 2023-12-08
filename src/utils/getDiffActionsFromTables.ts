@@ -138,7 +138,7 @@ export default function getDiffActionsFromTables(
                 const options =
                   currentStateTables[tableName].schema[df.path[2]];
 
-                if (options.references) depends.push(options.references.nodel);
+                if (options.references) depends.push(options.references.model);
 
                 actions.push({
                   actionType: "changeColumn",
@@ -241,7 +241,7 @@ export default function getDiffActionsFromTables(
           if (df.path[1] === "schema" && !getDiffOpt.ignore?.E?.fields?.includes(df.path[2])) {
             // new field attributes
             const options = currentStateTables[tableName].schema[df.path[2]];
-            if (options.references) depends.push(options.references.nodel);
+            if (options.references) depends.push(options.references.model);
 
             actions.push({
               actionType: "changeColumn",
