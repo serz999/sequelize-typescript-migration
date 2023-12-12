@@ -20,6 +20,20 @@ export default async function writeMigration(currentState, migration, options: I
   const replaceWith = "\\'";
 
   myState = myState.replace(searchRegExp, replaceWith);
+    
+  let initializeExtensions = '';
+  let initializeExtensionsThenWrapBeg = '';
+  let initializeExtensionsThenWrapEnd = '';
+  if (options.extensions) {
+    initializeExtensions = `queryInterface.sequelize.query(\`\n`
+    for (const extension of options.extensions) {
+        initializeExtensions += `\t\tCREATE EXTENSION IF NOT EXISTS ${extension};\n`
+    } 
+    initializeExtensions += `\t\`)`
+
+    initializeExtensionsThenWrapBeg = '.then(() => {'
+    initializeExtensionsThenWrapEnd = '})'
+  }
 
   let fillPeriodColumn = '';
   let createTriggerTemplate = '';
@@ -32,8 +46,7 @@ export default async function writeMigration(currentState, migration, options: I
                     SET \${command.params[1]} = '[\${new Date(Date.now()).toISOString()},)';
                 \`)
             } 
-          }, reject)
-      ` 
+          }, reject)` 
       createTriggerTemplate = `
         .then(() => { 
             if (command.fn === "createTable" && command.params[0].endsWith("${options.historyTablePostfix}")) {
@@ -44,8 +57,7 @@ export default async function writeMigration(currentState, migration, options: I
                     FOR EACH ROW EXECUTE PROCEDURE versioning('${options.historyPeriodFieldName}','"\${command.params[0]}"', true); 
                 \`)
             } 
-          }, reject)
-      `
+          }, reject)`
   }
 
   const versionCommands = `
@@ -147,7 +159,6 @@ module.exports = {
   pos: 0,
   up: function(queryInterface, Sequelize) {
     let index = this.pos;
-
     return new Promise(function(resolve, reject) {
       function next() {
         if (index < migrationCommands.length) {
@@ -161,7 +172,10 @@ module.exports = {
         } else resolve();
       }
 
-      next();
+      ${initializeExtensions}
+      ${initializeExtensionsThenWrapBeg}
+        next();
+      ${initializeExtensionsThenWrapEnd}
     });
   },
   down: function(queryInterface, Sequelize) {

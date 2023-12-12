@@ -36,6 +36,8 @@ export type IMigrationOptions = {
 
   debug?: boolean;
 
+  extensions?: string[];
+
   createVersioningTrigger?: boolean;
   historyTablePostfix?: string;
   historyPeriodFieldName?: string;
