@@ -27,7 +27,7 @@ export default async function writeMigration(currentState, migration, options: I
   if (options.extensions) {
     initializeExtensions = `queryInterface.sequelize.query(\`\n`
     for (const extension of options.extensions) {
-        initializeExtensions += `\t\tCREATE EXTENSION IF NOT EXISTS ${extension};\n`
+        initializeExtensions += `\t\tCREATE EXTENSION IF NOT EXISTS "${extension}";\n`
     } 
     initializeExtensions += `\t\`)`
 
