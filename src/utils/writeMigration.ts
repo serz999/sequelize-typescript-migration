@@ -163,7 +163,7 @@ module.exports = {
       function next() {
         if (index < migrationCommands.length) {
           let command = migrationCommands[index];
-          console.log("[#"+index+"] execute: " + command.fn);
+          console.log("[#"+index+"] execute: " + command.fn + " >> " + command.params[0]);
           index++;
           queryInterface[command.fn].apply(queryInterface, command.params)
           ${fillPeriodColumn}
@@ -185,7 +185,7 @@ module.exports = {
       function next() {
         if (index < rollbackCommands.length) {
           let command = rollbackCommands[index];
-          console.log("[#"+index+"] execute: " + command.fn);
+          console.log("[#"+index+"] execute: " + command.fn + " >> " + command.params[0]);
           index++;
           queryInterface[command.fn].apply(queryInterface, command.params).then(next, reject);
         }

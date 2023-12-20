@@ -2,7 +2,6 @@ import { existsSync } from "fs";
 import beautify from "js-beautify";
 import type { Model, ModelCtor } from "sequelize/types";
 import type { Sequelize } from "sequelize-typescript";
-
 import type { MigrationState } from "./constants";
 import createMigrationTable from "./utils/createMigrationTable";
 import getDiffActionsFromTables, { IgnoreOpt } from "./utils/getDiffActionsFromTables";
@@ -33,15 +32,20 @@ export type IMigrationOptions = {
    * comment of migration.
    */
   comment?: string;
-
-  debug?: boolean;
-
+  
+  /**
+   * extensions to be preloaded (Currently, supports only postgres) 
+   */
   extensions?: string[];
 
+  /**
+   * temporal tables supporting (Currently, supports only postgres)
+   */
   createVersioningTrigger?: boolean;
   historyTablePostfix?: string;
   historyPeriodFieldName?: string;
 
+  debug?: boolean;
 } & ReverseModelsOptions
 
 export class SequelizeTypescriptMigration {
@@ -56,6 +60,7 @@ export class SequelizeTypescriptMigration {
     options: IMigrationOptions
   ) => {
     options.preview = options.preview || false;
+    options.extensions = options.extensions || []
     options.createVersioningTrigger = options.createVersioningTrigger || false;
     options.historyTablePostfix = options.historyTablePostfix ?? '__history';
     options.historyPeriodFieldName = options.historyPeriodFieldName ?? '_period';
@@ -96,23 +101,25 @@ export class SequelizeTypescriptMigration {
         ignoreDown["N"]?.fields?.push(options.historyPeriodFieldName) 
     }
     
+    console.log("Getting up actions...")
     const upActions = getDiffActionsFromTables(
       previousState.tables,
       currentState.tables, {
-        ignore: ignoreUp     
+        ignore: ignoreUp,
+        historyTablePostfix: options.historyTablePostfix,
       } 
     );
+    console.log("Getting down actions...")
     const downActions = getDiffActionsFromTables(
       currentState.tables,
       previousState.tables, {
-          ignore: ignoreDown
+          ignore: ignoreDown,
+          historyTablePostfix: options.historyTablePostfix,
       }  
     );
 
     const migration = getMigration(upActions);
-    const tmp = getMigration(downActions);
-
-    migration.commandsDown = tmp.commandsUp;
+    migration.commandsDown = getMigration(downActions).commandsUp;
 
     if (migration.commandsUp.length === 0)
       return Promise.resolve({ msg: "success: no changes found" });

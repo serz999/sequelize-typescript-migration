@@ -54,6 +54,7 @@ function validateIgnoreOpt(ignore: IgnoreOpt) {
 
 type getDiffOpt = {
     ignore?: IgnoreOpt
+    historyTablePostfix?: string
 }
 
 export default function getDiffActionsFromTables(
@@ -68,8 +69,6 @@ export default function getDiffActionsFromTables(
   const differences = diff(previousStateTables, currentStateTables);
 
   if (!differences) return actions;
-
-  console.log(differences);
 
   differences.forEach((df) => {
     if (!df.path) throw new Error("Missing path");
@@ -269,7 +268,7 @@ export default function getDiffActionsFromTables(
     }
   });
 
-  const result = sortActions(actions);
+  const result = sortActions(actions, getDiffOpt.historyTablePostfix);
 
   return result;
 }
