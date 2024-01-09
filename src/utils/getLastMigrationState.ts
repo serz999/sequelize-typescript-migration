@@ -16,7 +16,9 @@ export default async function getLastMigrationState(sequelize: Sequelize) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const lastRevision: number =
     lastExecutedMigration !== undefined
-      ? parseInt(lastExecutedMigration.name.split("-")[0])
+      ? !isNaN(parseInt(lastExecutedMigration.name.split("-")[0]))
+        ? parseInt(lastExecutedMigration.name.split("-")[0])
+        : -1
       : -1;
 
   const [lastMigration] = await sequelize.query<SequelizeMigrationsMeta>(
