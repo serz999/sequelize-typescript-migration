@@ -89,18 +89,25 @@ function arrangeHistoryTables(actions: IAction[], historyTablePostfix: string) {
 
         if (act.tableName.endsWith(historyTablePostfix) && !observed.includes(act.tableName)) {
             const originTableName = act.tableName.replace(historyTablePostfix, "")
-            const originTableNameId = getActionIdByTableName(actions, originTableName, act.actionType)
+            const indexOfOriginTableName = getActionIdByTableName(actions, originTableName, act.actionType)
             
-            if (originTableNameId === -1) {
+            if (indexOfOriginTableName === -1) {
                 actions.splice(i, 1);
                 i--;
                 console.log("skip \"" + act.tableName + "\" migration, not found origin table reference.")
                 continue;
             }
-
-            actions.splice(originTableNameId + 1, 0, act);
-            actions.splice(i, 1);
-            i--;
+         
+            if (indexOfOriginTableName < i) {
+                actions.splice(indexOfOriginTableName + 1, 0, act);
+                actions.splice(i + 1, 1);
+                i--;
+            }
+            if (indexOfOriginTableName > i) { 
+                actions.splice(indexOfOriginTableName + 1, 0, act);
+                actions.splice(i, 1);
+                i--;
+            }
 
             observed.push(act.tableName);
         }
